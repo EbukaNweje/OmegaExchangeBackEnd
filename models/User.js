@@ -27,6 +27,11 @@ const UserSchema = new mongoose.Schema({
     type: String,
   },
 
+  notification: {
+    type: Boolean,
+    default: false,
+  },
+
   token: {
     type: String,
     required: true,
