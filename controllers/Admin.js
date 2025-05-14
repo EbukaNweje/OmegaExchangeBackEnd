@@ -174,7 +174,7 @@ exports.trunOnUserNotification = async (req, res) => {
         }
         user.notification = !user.notification;
         await user.save();
-        res.status(200).json({ message: 'User notification turned on successfully' });
+        res.status(200).json({ message: user.notification ? "User notification truned on" : "User notification truned off" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
