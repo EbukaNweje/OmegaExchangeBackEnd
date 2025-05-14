@@ -22,9 +22,11 @@ const InvestmentPlanSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+
     rio: {
         type: Number,
     },
+    
     investment: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Invest'

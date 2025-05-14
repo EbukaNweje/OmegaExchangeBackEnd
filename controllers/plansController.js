@@ -3,13 +3,14 @@ const InvestmentPlan = require('../models/plansModel');
 // Create a new investment plan
 exports.createPlan = async (req, res) => {
     try {
-        const { planName, minimumDeposit, maximumDeposit, percentageInterest, durationDays } = req.body;
+        const { planName, minimumDeposit, maximumDeposit, percentageInterest, durationDays, rio } = req.body;
         const newPlan = new InvestmentPlan({
             planName,
             minimumDeposit,
             maximumDeposit,
             percentageInterest,
-            durationDays
+            durationDays,
+            rio
         });
         const plan = await newPlan.save();
         res.status(201).json({ message: 'Plan created successfully', data: plan });
