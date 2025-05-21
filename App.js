@@ -9,6 +9,8 @@ const withdrawRouter = require("./routes/withdrawRouter")
 const historyRouter = require("./routes/historyRoute")
 const investRouter = require("./routes/investRouter")
 const planRouter = require("./routes/plansRouter")
+const Wallet = require("./routes/WalletRouter")
+
 const cors = require("cors");
 const app = express()
 app.use(cors());
@@ -21,6 +23,7 @@ app.use(express.json());
 
 
 app.use("/api", authRouter)
+
 app.use("/api", userRouter)
 app.use("/api", adminRouter)
 app.use("/api", depositRouter)
@@ -28,6 +31,8 @@ app.use("/api", withdrawRouter)
 app.use("/api", historyRouter)
 app.use("/api", investRouter)
 app.use("/api", planRouter)
+app.use("/api", Wallet)
+
 
 app.use((err, req, res, next)=>{
    const errorStatus = err.status || 500
