@@ -38,6 +38,18 @@ exports.getAllWalletAddress =async (req, res, next) => {
     }
 }
 
+exports.getOneWalletAddress = async (req, res) => {
+    try {
+        const wallet = await AddWallet.findById(req.params.id);
+        if (!wallet) {
+            return res.status(404).json({ message: 'Wallet Address not found' });
+        }
+        res.status(200).json({ data: wallet });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 exports.updateWalletAddress = async (req, res) => {
     try {
         const { walletAddress, walletName, coin} = req.body;
