@@ -699,15 +699,14 @@ const userPlanModel = require("../models/userPlanModel");
 
 exports.getAllUserInvestmentPlans = async (req, res) => {
   try {
-    // Find all UserPlan documents and populate both plan and investment fields
-    const userPlans = await userPlanModel.find().populate({
+    const { id } = req.params;
+    const userPlans = await userPlanModel.find({ user: id }).populate({
       path: "plan",
       populate: {
         path: "investment",
       },
     });
 
-    // Extract only the populated plan and investment details
     const investmentPlansWithDetails = userPlans.map((userPlan) => ({
       plan: userPlan.plan,
       investment: userPlan.investment,
