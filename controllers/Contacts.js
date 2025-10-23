@@ -1,23 +1,24 @@
-const Contact = require("../models/Contacts")
-const transporter = require("../utilities/email")
+const Contact = require("../models/Contacts");
+const sendEmail = require("../utilities/email");
+// const transporter = require("../utilities/email");
 
-exports.CreateContact = async (req, res, next) => { 
-    try{
-        const data = req.body
-        const NewContactMsg = await Contact.create(data)
+exports.CreateContact = async (req, res, next) => {
+  try {
+    const data = req.body;
+    const NewContactMsg = await Contact.create(data);
 
-        if(!req.body){
-            return next(createError(400, "Fill all information!"))
-        }
-        // const sender =  NewContactMsg.email
-        // console.log(sender)
+    if (!req.body) {
+      return next(createError(400, "Fill all information!"));
+    }
+    // const sender =  NewContactMsg.email
+    // console.log(sender)
 
-        const mailOptions = {
-          /*   let sender = NewContactMsg.email, */
-            from: process.env.USER,
-            to: process.env.USER, 
-            subject: "Support Form",
-          html: `
+    const mailOptions = {
+      /*   let sender = NewContactMsg.email, */
+      from: process.env.USER,
+      to: process.env.USER,
+      subject: "Support Form",
+      html: `
           <h4>Hi Admin!</h4>
             <p>${NewContactMsg.fullName} Just sent you a Support message</p>
 
@@ -28,46 +29,44 @@ exports.CreateContact = async (req, res, next) => {
 
            <p>Quickly send him an Email.</p> 
             `,
-        }
+    };
 
-        transporter.sendMail(mailOptions,(err, info)=>{
-            if(err){
-                console.log("erro",err.message);
-            }else{
-                console.log("Email has been sent to your inbox", info.response);
-            }
-        })
-        
-        res.status(201).json({
-            message: "message sent Successful",
-            data: NewContactMsg
-        })
+    // transporter.sendMail(mailOptions, (err, info) => {
+    //   if (err) {
+    //     console.log("erro", err.message);
+    //   } else {
+    //     console.log("Email has been sent to your inbox", info.response);
+    //   }
+    // });
+    sendEmail(mailOptions);
 
-    }catch(err){
-        next(err)
-    }
-
-}
-
+    res.status(201).json({
+      message: "message sent Successful",
+      data: NewContactMsg,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 exports.AdminSendEmail = async (req, res, next) => {
-    try{
-        const id = req.params.id
-        const msg = req.body.msg
-        const subject = req.body.subject
-        const UserEmail = await User.findById(id)
-        if(!UserEmail){
-            return res.status(400).json({
-                message: "User does not exist"
-            })
-        }
-        const email = UserEmail.email
-        console.log(email)
-        const mailOptions ={
-            from: process.env.USERE,
-            to: email,
-            subject: subject,
-          html: `
+  try {
+    const id = req.params.id;
+    const msg = req.body.msg;
+    const subject = req.body.subject;
+    const UserEmail = await User.findById(id);
+    if (!UserEmail) {
+      return res.status(400).json({
+        message: "User does not exist",
+      });
+    }
+    const email = UserEmail.email;
+    console.log(email);
+    const mailOptions = {
+      from: process.env.USERE,
+      to: email,
+      subject: subject,
+      html: `
           <!DOCTYPE html>
           <html lang="en">
           <head>
@@ -172,24 +171,23 @@ exports.AdminSendEmail = async (req, res, next) => {
           </html>
           
             `,
-        
-        }
-        
-        transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
-        res.status(200).json({
-            status: 'success',
-            message: 'Email sent successfully',
-        });
-    } catch (error) {
-        res.status(400).json({
-            status: 'fail',
-            message: error.message,
-        });
-    }
-}
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
+    res.status(200).json({
+      status: "success",
+      message: "Email sent successfully",
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+};
